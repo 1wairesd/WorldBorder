@@ -9,7 +9,11 @@
 
 # When a teleport is out of border
 # - {world} : replaced by the word name
-out-of-border-teleport: "&cYou cannot teleport out of the border into the '&e{world}&c'."
+out-of-border-teleport: "&cВы не можете телепортироваться за границу мира '&e{world}&c'."
+
+# When a spectator (GM3) tries to fly past the border
+# - {world} : replaced by the word name
+spectator-out-of-border: "&cВы не можете летать за границу мира '&e{world}&c'."
 
 # When sending a non-permitted command
-permission-command: "&cYou do not have access to this command"
+permission-command: "&cУ вас нет доступа к этой команде."

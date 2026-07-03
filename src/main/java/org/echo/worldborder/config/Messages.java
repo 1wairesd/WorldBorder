@@ -35,18 +35,22 @@ public class Messages {
     }
 
     // Méthode pour récupérer un message à partir de sa clé
+    // Возвращает null если ключ не найден или значение пустое — чтобы не отправлять пустые сообщения
     public String getMessage(String key) {
         String message = yaml.getString(key);
-        if (message != null) {
-            return ChatColor.translateAlternateColorCodes('&', message);
+        if (message == null || message.isEmpty()) {
+            return null;
         }
-        return "";
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     // Méthode pour récupérer un message avec des remplacements
     private String getFormattedMessage(String key, String... replacements) {
 
         String message = getMessage(key);
+        if (message == null) {
+            return null;
+        }
 
         for (int i = 0; i < replacements.length; i += 2) {
             String placeholder = replacements[i];
@@ -62,5 +66,9 @@ public class Messages {
 
     public String getOutOfBorderTeleport(String worldName) {
         return getFormattedMessage("out-of-border-teleport", "{world}", worldName);
+    }
+
+    public String getSpectatorOutOfBorder(String worldName) {
+        return getFormattedMessage("spectator-out-of-border", "{world}", worldName);
     }
 }

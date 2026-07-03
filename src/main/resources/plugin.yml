@@ -1,7 +1,7 @@
 name: WorldBorder
 version: '${project.version}'
 main: org.echo.worldborder.Main
-api-version: '1.13'
+api-version: '1.20'
 
 author: Echo24h
 description: A plugin that allows you to control your world borders

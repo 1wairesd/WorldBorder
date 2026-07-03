@@ -19,8 +19,11 @@ public final class Main extends JavaPlugin {
         this.messages = new Messages(this);
         manager.createBorders();
         // Enregistrement de la commande
-        getCommand("border").setExecutor(new Commands(this));
-        getCommand("worldborder").setExecutor(new Commands(this));
+        Commands commands = new Commands(this);
+        getCommand("border").setExecutor(commands);
+        getCommand("border").setTabCompleter(commands);
+        getCommand("worldborder").setExecutor(commands);
+        getCommand("worldborder").setTabCompleter(commands);
         getServer().getPluginManager().registerEvents(new TeleportListener(this), this);
     }
 
