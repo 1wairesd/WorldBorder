@@ -10,6 +10,10 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.echo.worldborder.Border;
 import org.echo.worldborder.Main;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -157,10 +161,47 @@ public class Commands implements CommandExecutor, TabCompleter {
 
         for (World world : Bukkit.getWorlds()) {
             Border border = borders.get(world.getName());
-            if (border != null)
-                sender.sendMessage("- " + ChatColor.YELLOW + world.getName() + ": " + ChatColor.GREEN + "on");
-            else
-                sender.sendMessage("- " + ChatColor.YELLOW + world.getName() + ": " + ChatColor.RED + "off");
+
+            // Hover-подсказки работают только для игроков
+            if (sender instanceof Player && border != null) {
+                TextComponent line = new TextComponent("- ");
+                line.setColor(net.md_5.bungee.api.ChatColor.WHITE);
+
+                TextComponent worldName = new TextComponent(world.getName());
+                worldName.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
+                worldName.setBold(true);
+
+                // Текст при наведении
+                String hoverText = ChatColor.GRAY + "Size: " + ChatColor.WHITE + border.getBorderSize()
+                        + "\n" + ChatColor.GRAY + "Center X: " + ChatColor.WHITE + border.getCenterX()
+                        + "\n" + ChatColor.GRAY + "Center Z: " + ChatColor.WHITE + border.getCenterZ();
+                worldName.setHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        new ComponentBuilder(hoverText).create()
+                ));
+
+                TextComponent status = new TextComponent(": ");
+                status.setColor(net.md_5.bungee.api.ChatColor.WHITE);
+
+                TextComponent statusValue = new TextComponent("on");
+                statusValue.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+
+                line.addExtra(worldName);
+                line.addExtra(status);
+                line.addExtra(statusValue);
+
+                ((Player) sender).spigot().sendMessage(line);
+            } else {
+                // Для консоли — обычный текст
+                if (border != null)
+                    sender.sendMessage("- " + ChatColor.YELLOW + world.getName() + ChatColor.WHITE + ": "
+                            + ChatColor.GREEN + "on"
+                            + ChatColor.GRAY + " (size=" + ChatColor.WHITE + border.getBorderSize()
+                            + ChatColor.GRAY + ", centerX=" + ChatColor.WHITE + border.getCenterX()
+                            + ChatColor.GRAY + ", centerZ=" + ChatColor.WHITE + border.getCenterZ() + ChatColor.GRAY + ")");
+                else
+                    sender.sendMessage("- " + ChatColor.YELLOW + world.getName() + ChatColor.WHITE + ": " + ChatColor.RED + "off");
+            }
         }
     }
 
